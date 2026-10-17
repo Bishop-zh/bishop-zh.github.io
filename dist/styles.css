@@ -148,3 +148,10 @@ body.motion-paused #ambient-fallback { animation-play-state:paused }
 }
 @media(max-width:360px) { .site-header nav { gap:14px }.profile-aside { grid-template-columns:1fr; gap:14px }.profile-detail br { display:none }.project-copy h2 { font-size:27px }.feature-list li { grid-template-columns:65px 1fr; gap:8px }.featured-note-body { grid-template-columns:1fr }.note-figure { display:none } }
 @media(prefers-reduced-motion:reduce) { html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important} }
+/* Keep the image and close control inside the viewport, including short/mobile windows. */
+dialog[open] { display:flex; flex-direction:column; gap:16px; overflow:hidden }
+.dialog-bar { flex:0 0 auto; margin-bottom:0; position:relative; z-index:1 }
+.dialog-bar form { margin:0; flex-shrink:0 }
+#dialog-image { flex:1 1 auto; min-height:0; max-height:calc(94svh - 112px); object-fit:contain; width:100%; height:auto }
+.film-card img { object-fit:contain; background:#101719 }
+@media(max-width:700px) { #dialog-image { max-height:calc(94svh - 96px) }.dialog-bar { gap:12px } }

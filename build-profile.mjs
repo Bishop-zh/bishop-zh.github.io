@@ -24,7 +24,8 @@ html = html.replace(/<section id="rust"/, `${skillsPanel}\n    <section id="rust
 if (!html.includes('<a href="#skills">技能</a>')) html = html.replace('<nav aria-label="主导航">', '<nav aria-label="主导航"><a href="#skills">技能</a>');
 html = html.replace(/<nav class="page-rail"[\s\S]*?<\/nav>/, '<nav class="page-rail" aria-label="分屏导航"><a href="#profile" aria-label="个人信息" aria-current="location"><span>个人</span><i></i></a><a href="#skills" aria-label="技能与实践"><span>技能</span><i></i></a><a href="#rust" aria-label="锈境：能源重启"><span>锈境</span><i></i></a><a href="#boom" aria-label="Who Will BOOM"><span>BOOM</span><i></i></a><a href="#pkball" aria-label="PKBall"><span>PKBall</span><i></i></a><a href="#notes" aria-label="技术与记录"><span>记录</span><i></i></a></nav>');
 html = html.replace(/(<span class="counter-line"><\/span><span>)\d+(<\/span>)/, '$106$2');
-if (!html.includes('href="profile.css"')) html = html.replace('</head>', '  <link rel="stylesheet" href="profile.css">\n</head>');
+if (!html.includes('href="profile.css')) html = html.replace('</head>', '  <link rel="stylesheet" href="profile.css">\n</head>');
 html = html.replace(/<footer>[\s\S]*?<\/footer>/, `<footer><span>© ${e(p.name)} / ${e(p.alias)}</span><a href="resume.html">查看简历 ↗</a><a href="${url(codeHost.url)}" target="_blank" rel="noopener noreferrer">${codeHost.label} ↗</a></footer>`);
 await writeFile(new URL('dist/index.html', root), html);
 await import('./build-resume.mjs');
+await (await import('./version-assets.mjs')).versionAssets();

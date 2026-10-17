@@ -1,15 +1,20 @@
 (() => {
   'use strict';
   const scenes = [
-    {src:'assets/rust-menu-preview.webp', name:'锈境：能源重启 · 主菜单预览'},
-    {src:'assets/rust-levels-preview.webp', name:'锈境：能源重启 · 选关界面预览'},
-    {src:'assets/rust-settings-preview.webp', name:'锈境：能源重启 · 设置界面预览'},
-    {src:'assets/boom-gameplay.webp', name:'Who Will BOOM · AI 对局实机'},
+    {src:'assets/rust-menu-preview.webp', name:'锈境 · 主菜单设计'},
+    {src:'assets/rust-levels-preview.webp', name:'锈境 · 关卡选择设计'},
+    {src:'assets/rust-settings-preview.webp', name:'锈境 · 设置设计'},
+    {src:'assets/boom-match.webp', name:'Who Will BOOM · AI 对局'},
     {src:'assets/ambient-night.svg', name:'个人信息 · 夜色'},
     {src:'assets/ambient-notes.svg', name:'技术与记录 · 夜色'},
-    {src:'assets/pkball-battle.webp', name:'PKBall · 弹珠决斗实机'},
-    {src:'assets/boom-menu.webp', name:'Who Will BOOM · 主菜单实机'},
-    {src:'assets/pkball-overtime.webp', name:'PKBall · 决胜阶段实机'}
+    {src:'assets/pkball-duel.webp', name:'PKBall · 自动决斗'},
+    {src:'assets/boom-home.webp', name:'Who Will BOOM · 酒馆主菜单'},
+    {src:'assets/pkball-menu.webp', name:'PKBall · 主菜单'},
+    {src:'assets/rust-gameplay.webp', name:'锈境 · 平台关卡实机'},
+    {src:'assets/boom-setup.webp', name:'Who Will BOOM · 角色与开局'},
+    {src:'assets/boom-rules.webp', name:'Who Will BOOM · 规则说明'},
+    {src:'assets/pkball-preparation.webp', name:'PKBall · 冒险准备与装备环'},
+    {src:'assets/pkball-loadout.webp', name:'PKBall · 双方构筑'}
   ];
   const canvas = document.getElementById('ambient-canvas');
   const fallback = document.getElementById('ambient-fallback');
@@ -152,6 +157,7 @@
     if(motionEnabled||fromScene!==currentScene) kick();
   }
   function changeScene(index) {
+    if(!Number.isInteger(index) || !scenes[index]) return;
     if(index===currentScene) return;
     const now=performance.now();
     if((now-blendStart)/fadeDuration>=.5) fromScene=currentScene;

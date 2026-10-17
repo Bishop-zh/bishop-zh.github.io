@@ -41,20 +41,20 @@ try{
   await shot(page,'desktop-rust');
   const a=await page.screenshot();await page.waitForTimeout(450);const b=await page.screenshot();
   check(!a.equals(b),'Ambient background not animated');
-  for(const expected of [1,2,0]){
-    await page.getByRole('button',{name:'下一张图片',exact:true}).click();await page.waitForTimeout(650);
+  for(const expected of [1,2,3,0]){
+    await page.locator('#rust').getByRole('button',{name:'下一张图片',exact:true}).click();await page.waitForTimeout(650);
     check((await state(page)).galleryIndex===expected,'Next image or forward wrap failed');
-    check((await state(page)).activeImage===expected,'Ambient image out of sync');
+    check((await state(page)).activeImage===[0,1,2,9][expected],'Ambient image out of sync');
   }
-  await page.getByRole('button',{name:'上一张图片',exact:true}).click();await page.waitForTimeout(650);
-  check((await state(page)).galleryIndex===2,'Reverse wrap failed');
-  await page.locator('.film-card[data-offset="0"]').click();
+  await page.locator('#rust').getByRole('button',{name:'上一张图片',exact:true}).click();await page.waitForTimeout(650);
+  check((await state(page)).galleryIndex===3,'Reverse wrap failed');
+  await page.locator('#rust .film-card[data-offset="0"]').click();
   check(await page.locator('#image-dialog').evaluate(n=>n.open),'Image dialog missing');
-  check((await page.locator('#dialog-image').getAttribute('src')).includes('settings'),'Dialog shows wrong image');
+  check((await page.locator('#dialog-image').getAttribute('src')).includes('gameplay'),'Dialog shows wrong image');
   await page.keyboard.press('Escape');
   check(!(await page.locator('#image-dialog').evaluate(n=>n.open)),'Escape did not close image');
-  check(await page.locator('.film-card[data-offset="0"]').evaluate(n=>n===document.activeElement),'Image focus not restored');
-  await page.locator('.film-gallery').focus();await page.keyboard.press('ArrowRight');await page.waitForTimeout(650);
+  check(await page.locator('#rust .film-card[data-offset="0"]').evaluate(n=>n===document.activeElement),'Image focus not restored');
+  await page.locator('#rust .film-gallery').focus();await page.keyboard.press('ArrowRight');await page.waitForTimeout(650);
   check((await state(page)).galleryIndex===0,'Gallery keyboard failed');
   await page.mouse.wheel(0,120);await page.waitForTimeout(1100);
   check((await state(page)).activePanel==='boom'&&(await state(page)).activeImage===3,'Next wheel did not select BOOM');
@@ -62,9 +62,9 @@ try{
   await page.mouse.click(30,200);await page.keyboard.press('PageDown');await page.waitForTimeout(1100);
   check((await state(page)).activePanel==='pkball','PKBall PageDown navigation failed');
   check((await state(page)).activeImage===6,'PKBall ambient missing');await shot(page,'desktop-pkball');
-  await page.locator('#pkball [data-label="决胜阶段"]').click();
-  await page.locator('#pkball [data-enlarge]').click();
-  check((await page.locator('#dialog-image').getAttribute('src')).includes('pkball-overtime'),'PKBall screenshot dialog mismatch');
+  for(let i=0;i<3;i++){await page.locator('#pkball .gallery-next').click();await page.waitForTimeout(650);}
+  await page.locator('#pkball .film-card[data-offset="0"]').click();
+  check((await page.locator('#dialog-image').getAttribute('src')).includes('pkball-loadout'),'PKBall screenshot dialog mismatch');
   await page.keyboard.press('Escape');
   check(await page.locator('.play-link').count()===3,'Expected three separate project play links');
   const binaries=await page.evaluate(()=>performance.getEntriesByType('resource').filter(r=>/\.(wasm|unityweb)(\?|$)/.test(r.name)).length);
@@ -103,7 +103,7 @@ try{
   mobile.on('pageerror',e=>errors.push(e.message));
   await mobile.goto('http://127.0.0.1:4177/',{waitUntil:'networkidle'});await mobile.waitForFunction(()=>window.__portfolioPreview?.state.ready);
   await shot(mobile,'mobile-profile');await jump(mobile,'rust');await shot(mobile,'mobile-rust');
-  const box=await mobile.locator('.film-gallery').boundingBox();
+  const box=await mobile.locator('#rust .film-gallery').boundingBox();
   await swipe(mobile,300,box.y+box.height/2,90,box.y+box.height/2+4);
   check((await state(mobile)).galleryIndex===1,'Real mobile horizontal swipe failed');
   check((await state(mobile)).activePanel==='rust','Horizontal swipe moved vertical panel');
@@ -119,7 +119,7 @@ try{
   await reduced.goto('http://127.0.0.1:4177/',{waitUntil:'networkidle'});await reduced.waitForFunction(()=>window.__portfolioPreview?.state.ready);
   check(!(await state(reduced)).motionEnabled,'Reduced motion ignored');
   check((await state(reduced)).activeImage===4,'Reduced motion night scene missing');
-  await jump(reduced,'rust');await reduced.locator('.gallery-next').click();
+  await jump(reduced,'rust');await reduced.locator('#rust .gallery-next').click();
   check((await state(reduced)).galleryIndex===1&&(await state(reduced)).activeImage===1,'Reduced motion gallery failed');
   report.reducedMotion={startsPaused:true,gallery:true};
   const fallback=await browser.newPage({viewport:{width:390,height:844}});

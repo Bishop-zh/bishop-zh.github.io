@@ -3,25 +3,36 @@
   const panels = [...document.querySelectorAll('.panel')];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
-  const gallery = document.querySelector('.film-gallery');
-  const stage = document.getElementById('rust-film');
-  const slides = [
-    {src:'assets/rust-menu-preview.webp',label:'主菜单'},
-    {src:'assets/rust-levels-preview.webp',label:'选关'},
-    {src:'assets/rust-settings-preview.webp',label:'设置'}
-  ];
   const dialog = document.getElementById('image-dialog');
-  const mod = value => (value + slides.length) % slides.length;
-  let panelIndex = 0, galleryIndex = 0, animating = false, queuedDirection = 0;
-  let suppressClickUntil = 0, lastOpener, scrollingFrame = 0;
-  const cards = [];
+  let panelIndex = 0, lastOpener, scrollingFrame = 0;
+  const galleries = new Map();
+  // Bind dialog recovery before galleries. The close form also works without JavaScript.
+  dialog.addEventListener('close',()=>{
+    if(lastOpener?.isConnected) lastOpener.focus({preventScroll:true});
+  });
+  let backdropPointer = false;
+  const outsideDialog = event => {
+    const r=dialog.getBoundingClientRect();
+    return event.clientX<r.left || event.clientX>r.right || event.clientY<r.top || event.clientY>r.bottom;
+  };
+  dialog.addEventListener('pointerdown',event=>{backdropPointer=event.target===dialog && outsideDialog(event);});
+  dialog.addEventListener('click',event=>{
+    if(backdropPointer && event.target===dialog && outsideDialog(event)) dialog.close();
+    backdropPointer=false;
+  });
+  function openImage(src,title,opener) {
+    lastOpener=opener;
+    const image=document.getElementById('dialog-image');
+    image.src=src;image.alt=title;
+    document.getElementById('dialog-title').textContent=title;
+    if(!dialog.open) dialog.showModal();
+  }
 
   function updateScene() {
     const id = panels[panelIndex].id;
     document.body.dataset.panel = id;
     document.body.dataset.activeProject = ['boom','pkball'].includes(id) ? id : 'rust';
-    const selectedShot=document.querySelector(`[data-screenshots="${id}"] [data-shot][aria-pressed="true"]`);
-    window.portfolioAmbient.setScene(selectedShot ? Number(selectedShot.dataset.scene) : {profile:4,skills:5,rust:galleryIndex,boom:3,pkball:6,notes:5}[id]);
+    window.portfolioAmbient?.setScene(galleries.get(id)?.scene ?? {profile:4,skills:5,rust:0,boom:3,pkball:6,notes:5}[id]);
     document.getElementById('page-number').textContent = String(panelIndex + 1).padStart(2,'0');
     document.querySelectorAll('.page-rail a').forEach((link,index) => {
       if(index === panelIndex) link.setAttribute('aria-current','location');
@@ -74,99 +85,116 @@
   },{passive:false});
   addEventListener('keydown',event => {
     if(dialog.open || event.altKey || event.ctrlKey || event.metaKey || event.target.closest('input,textarea,select,[contenteditable]')) return;
-    if(gallery.contains(event.target) && ['ArrowLeft','ArrowRight'].includes(event.key)) {
-      event.preventDefault();moveFilm(event.key==='ArrowRight'?1:-1);return;
+    const gallery=[...galleries.values()].find(item=>item.element.contains(event.target));
+    if(gallery && ['ArrowLeft','ArrowRight'].includes(event.key)) {
+      event.preventDefault();gallery.move(event.key==='ArrowRight'?1:-1);return;
     }
     if(event.target.closest('button') && ['ArrowUp','ArrowDown','Home','End'].includes(event.key)) return;
     const next={ArrowDown:panelIndex+1,PageDown:panelIndex+1,ArrowUp:panelIndex-1,PageUp:panelIndex-1,Home:0,End:panels.length-1}[event.key];
     if(next!==undefined) {event.preventDefault();goTo(next);}
   });
 
-  function setCard(card,offset) {
-    card.dataset.offset=String(offset);
-    const index=mod(galleryIndex+offset),image=card.querySelector('img');
-    image.src=slides[index].src;image.alt='锈境：能源重启 · '+slides[index].label+'界面设计';
-    card.tabIndex=offset===0?0:-1;
-    card.setAttribute('aria-label','放大查看锈境'+slides[index].label+'界面');
-    if(offset===0) card.removeAttribute('aria-hidden');else card.setAttribute('aria-hidden','true');
-  }
-  function updateGalleryUI() {
-    document.getElementById('rust-caption').textContent=slides[galleryIndex].label;
-    document.getElementById('gallery-counter').textContent=String(galleryIndex+1).padStart(2,'0')+' / 03';
-    document.querySelectorAll('.gallery-ticks i').forEach((tick,index)=>tick.classList.toggle('active',index===galleryIndex));
-    if(panels[panelIndex].id==='rust') window.portfolioAmbient.setScene(galleryIndex);
-  }
-  for(let offset=-2;offset<=2;offset++) {
-    const card=document.createElement('button');card.type='button';card.className='film-card';
-    const image=document.createElement('img');image.width=1672;image.height=941;image.draggable=false;
-    card.append(image);setCard(card,offset);
-    card.addEventListener('click',()=>{
-      if(performance.now()<suppressClickUntil) return;
-      const position=Number(card.dataset.offset);
-      if(position) moveFilm(Math.sign(position));else openImage(slides[galleryIndex].src,'锈境 · '+slides[galleryIndex].label,card);
-    });
-    cards.push(card);stage.append(card);
-  }
-  function moveFilm(direction) {
-    if(animating) {queuedDirection=direction;return;}
-    const focusedCard=cards.includes(document.activeElement);
-    animating=true;galleryIndex=mod(galleryIndex+direction);
-    cards.forEach(card=>{
-      const shifted=Number(card.dataset.offset)-direction,recycled=shifted < -2 || shifted > 2;
-      const offset=shifted < -2 ? 2 : shifted > 2 ? -2 : shifted;
-      if(recycled) card.classList.add('recycling');
-      setCard(card,offset);
-      if(recycled) {void card.offsetWidth;requestAnimationFrame(()=>card.classList.remove('recycling'));}
-    });
-    if(focusedCard) cards.find(card=>card.dataset.offset==='0').focus({preventScroll:true});
-    updateGalleryUI();
-    setTimeout(()=>{animating=false;if(queuedDirection){const next=queuedDirection;queuedDirection=0;moveFilm(next);}},reduceMotion.matches?0:570);
-  }
-  document.querySelector('.gallery-prev').addEventListener('click',()=>moveFilm(-1));
-  document.querySelector('.gallery-next').addEventListener('click',()=>moveFilm(1));
-  let pointer;
-  gallery.addEventListener('pointerdown',event=>{
-    if(event.button!==0 || event.target.closest('.gallery-arrow')) return;
-    pointer={id:event.pointerId,x:event.clientX,y:event.clientY};
-  });
-  gallery.addEventListener('pointermove',event=>{
-    if(!pointer || event.pointerId!==pointer.id) return;
-    const dx=event.clientX-pointer.x,dy=event.clientY-pointer.y;
-    if(Math.abs(dx)>12 && Math.abs(dx)>Math.abs(dy)*1.3) {
-      suppressClickUntil=performance.now()+500;
-      if(!gallery.hasPointerCapture(event.pointerId)) gallery.setPointerCapture(event.pointerId);
+  const projects = {
+    rust:{title:'锈境：能源重启',slides:[
+      {src:'assets/rust-menu-preview.webp',label:'主菜单 · 界面设计',scene:0},
+      {src:'assets/rust-levels-preview.webp',label:'关卡选择 · 界面设计',scene:1},
+      {src:'assets/rust-settings-preview.webp',label:'设置 · 界面设计',scene:2},
+      {src:'assets/rust-gameplay.webp',label:'平台关卡 · 实机',scene:9}
+    ]},
+    boom:{title:'Who Will BOOM',slides:[
+      {src:'assets/boom-match.webp',label:'棋盘与 AI 对局',scene:3},
+      {src:'assets/boom-home.webp',label:'酒馆主菜单',scene:7},
+      {src:'assets/boom-setup.webp',label:'角色选择与开局',scene:10},
+      {src:'assets/boom-rules.webp',label:'规则与玩法说明',scene:11}
+    ]},
+    pkball:{title:'PKBall',slides:[
+      {src:'assets/pkball-duel.webp',label:'弹珠自动决斗',scene:6},
+      {src:'assets/pkball-menu.webp',label:'主菜单与角色外观',scene:8},
+      {src:'assets/pkball-preparation.webp',label:'冒险准备与装备环',scene:12},
+      {src:'assets/pkball-loadout.webp',label:'主播模式 · 双方构筑',scene:13}
+    ]}
+  };
+  function createGallery(root,project) {
+    const element=root.querySelector('.film-gallery'),stage=root.querySelector('.film-stage');
+    const caption=root.querySelector('[data-gallery-caption]'),counter=root.querySelector('[data-gallery-counter]');
+    const ticks=root.querySelector('.gallery-ticks'),cards=[];
+    const mod=value=>(value%project.slides.length+project.slides.length)%project.slides.length;
+    let index=0,animating=false,queuedDirection=0,suppressClickUntil=0,pointer;
+    ticks.replaceChildren(...project.slides.map(()=>document.createElement('i')));
+    function setCard(card,offset) {
+      const slide=project.slides[mod(index+offset)],image=card.querySelector('img');
+      card.dataset.offset=String(offset);image.src=slide.src;image.alt=project.title+' · '+slide.label;
+      card.tabIndex=offset===0?0:-1;
+      card.setAttribute('aria-label','放大查看 '+project.title+' · '+slide.label);
+      if(offset===0)card.removeAttribute('aria-hidden');else card.setAttribute('aria-hidden','true');
     }
-  });
-  gallery.addEventListener('pointerup',event=>{
-    if(!pointer || event.pointerId!==pointer.id) return;
-    const dx=event.clientX-pointer.x,dy=event.clientY-pointer.y;
-    if(Math.abs(dx)>42 && Math.abs(dx)>Math.abs(dy)*1.3) {suppressClickUntil=performance.now()+500;moveFilm(dx<0?1:-1);}
-    if(gallery.hasPointerCapture(event.pointerId)) gallery.releasePointerCapture(event.pointerId);
-    pointer=null;
-  });
-  gallery.addEventListener('pointercancel',()=>{pointer=null;});
-  function openImage(src,title,opener) {
-    if(animating) return;
-    lastOpener=opener;document.getElementById('dialog-image').src=src;
-    document.getElementById('dialog-image').alt=title;document.getElementById('dialog-title').textContent=title;dialog.showModal();
+    function update() {
+      caption.textContent=project.slides[index].label;
+      counter.textContent=String(index+1).padStart(2,'0')+' / '+String(project.slides.length).padStart(2,'0');
+      [...ticks.children].forEach((tick,i)=>tick.classList.toggle('active',i===index));
+      if(panels[panelIndex].id===root.dataset.gallery) window.portfolioAmbient?.setScene(project.slides[index].scene);
+    }
+    function move(direction) {
+      if(animating){queuedDirection=direction;return;}
+      const focusedCard=cards.includes(document.activeElement);
+      animating=true;index=mod(index+direction);
+      cards.forEach(card=>{
+        const shifted=Number(card.dataset.offset)-direction,recycled=shifted < -2 || shifted > 2;
+        const offset=shifted < -2 ? 2 : shifted > 2 ? -2 : shifted;
+        if(recycled)card.classList.add('recycling');
+        setCard(card,offset);
+        if(recycled){void card.offsetWidth;requestAnimationFrame(()=>card.classList.remove('recycling'));}
+      });
+      if(focusedCard)cards.find(card=>card.dataset.offset==='0').focus({preventScroll:true});
+      update();
+      setTimeout(()=>{animating=false;if(queuedDirection){const next=queuedDirection;queuedDirection=0;move(next);}},reduceMotion.matches?0:570);
+    }
+    for(let offset=-2;offset<=2;offset++) {
+      const card=document.createElement('button');card.type='button';card.className='film-card';
+      const image=document.createElement('img');image.width=1600;image.height=900;image.draggable=false;
+      card.append(image);setCard(card,offset);
+      card.addEventListener('click',()=>{
+        if(performance.now()<suppressClickUntil)return;
+        const position=Number(card.dataset.offset);
+        if(position)move(Math.sign(position));
+        else{const slide=project.slides[index];openImage(slide.src,project.title+' · '+slide.label,card);}
+      });
+      cards.push(card);stage.append(card);
+    }
+    root.querySelector('.gallery-prev').addEventListener('click',()=>move(-1));
+    root.querySelector('.gallery-next').addEventListener('click',()=>move(1));
+    element.addEventListener('pointerdown',event=>{
+      if(event.button!==0 || event.target.closest('.gallery-arrow'))return;
+      pointer={id:event.pointerId,x:event.clientX,y:event.clientY};
+    });
+    element.addEventListener('pointermove',event=>{
+      if(!pointer || event.pointerId!==pointer.id)return;
+      const dx=event.clientX-pointer.x,dy=event.clientY-pointer.y;
+      if(Math.abs(dx)>12 && Math.abs(dx)>Math.abs(dy)*1.3){
+        suppressClickUntil=performance.now()+500;
+        if(!element.hasPointerCapture(event.pointerId))element.setPointerCapture(event.pointerId);
+      }
+    });
+    element.addEventListener('pointerup',event=>{
+      if(!pointer || event.pointerId!==pointer.id)return;
+      const dx=event.clientX-pointer.x,dy=event.clientY-pointer.y;
+      if(Math.abs(dx)>42 && Math.abs(dx)>Math.abs(dy)*1.3){suppressClickUntil=performance.now()+500;move(dx<0?1:-1);}
+      if(element.hasPointerCapture(event.pointerId))element.releasePointerCapture(event.pointerId);
+      pointer=null;
+    });
+    element.addEventListener('pointercancel',()=>{pointer=null;});
+    update();
+    return{element,move,get index(){return index;},get scene(){return project.slides[index].scene;}};
   }
-  document.querySelectorAll('[data-screenshots]').forEach(group => {
-    const image=group.querySelector('img'),caption=group.querySelector('[data-shot-caption]');
-    group.querySelector('[data-enlarge]').addEventListener('click',event=>openImage(image.getAttribute('src'),group.dataset.title+' · '+caption.textContent,event.currentTarget));
-    group.querySelectorAll('[data-shot]').forEach(button=>button.addEventListener('click',()=>{
-      image.src=button.dataset.shot;image.alt=group.dataset.title+' · '+button.dataset.label+'实机截图';
-      caption.textContent=button.dataset.label;
-      group.querySelectorAll('[data-shot]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
-      if(panels[panelIndex].id===group.dataset.screenshots) window.portfolioAmbient.setScene(Number(button.dataset.scene));
-    }));
+  document.querySelectorAll('[data-gallery]').forEach(root=>{
+    const project=projects[root.dataset.gallery];
+    if(project)galleries.set(root.dataset.gallery,createGallery(root,project));
   });
-  document.getElementById('dialog-close').addEventListener('click',()=>dialog.close());
-  dialog.addEventListener('close',()=>lastOpener?.focus({preventScroll:true}));
-  dialog.addEventListener('click',event=>{
-    if(event.target!==dialog) return;
-    const r=dialog.getBoundingClientRect();
-    if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom) dialog.close();
-  });
-  window.__portfolioPreview={get state(){return{activePanel:panels[panelIndex].id,panelIndex,activeProject:document.body.dataset.activeProject,galleryIndex,...window.portfolioAmbient.state};}};
-  updateScene();updateGalleryUI();requestAnimationFrame(syncPanel);
+  window.__portfolioPreview={get state(){return{
+    activePanel:panels[panelIndex].id,panelIndex,activeProject:document.body.dataset.activeProject,
+    galleryIndex:(galleries.get(panels[panelIndex].id)||galleries.get('rust'))?.index??0,
+    galleryIndices:Object.fromEntries([...galleries].map(([id,gallery])=>[id,gallery.index])),
+    ...window.portfolioAmbient?.state
+  };}};
+  updateScene();requestAnimationFrame(syncPanel);
 })();
