@@ -19,8 +19,9 @@
   function updateScene() {
     const id = panels[panelIndex].id;
     document.body.dataset.panel = id;
-    document.body.dataset.activeProject = id === 'boom' ? 'boom' : 'rust';
-    window.portfolioAmbient.setScene({profile:4,skills:5,rust:galleryIndex,boom:3,notes:5}[id]);
+    document.body.dataset.activeProject = ['boom','pkball'].includes(id) ? id : 'rust';
+    const selectedShot=document.querySelector(`[data-screenshots="${id}"] [data-shot][aria-pressed="true"]`);
+    window.portfolioAmbient.setScene(selectedShot ? Number(selectedShot.dataset.scene) : {profile:4,skills:5,rust:galleryIndex,boom:3,pkball:6,notes:5}[id]);
     document.getElementById('page-number').textContent = String(panelIndex + 1).padStart(2,'0');
     document.querySelectorAll('.page-rail a').forEach((link,index) => {
       if(index === panelIndex) link.setAttribute('aria-current','location');
@@ -149,7 +150,16 @@
     lastOpener=opener;document.getElementById('dialog-image').src=src;
     document.getElementById('dialog-image').alt=title;document.getElementById('dialog-title').textContent=title;dialog.showModal();
   }
-  document.querySelector('[data-open-boom]').addEventListener('click',event=>openImage('assets/boom-cover.svg','Who Will BOOM · 概念封面',event.currentTarget));
+  document.querySelectorAll('[data-screenshots]').forEach(group => {
+    const image=group.querySelector('img'),caption=group.querySelector('[data-shot-caption]');
+    group.querySelector('[data-enlarge]').addEventListener('click',event=>openImage(image.getAttribute('src'),group.dataset.title+' · '+caption.textContent,event.currentTarget));
+    group.querySelectorAll('[data-shot]').forEach(button=>button.addEventListener('click',()=>{
+      image.src=button.dataset.shot;image.alt=group.dataset.title+' · '+button.dataset.label+'实机截图';
+      caption.textContent=button.dataset.label;
+      group.querySelectorAll('[data-shot]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+      if(panels[panelIndex].id===group.dataset.screenshots) window.portfolioAmbient.setScene(Number(button.dataset.scene));
+    }));
+  });
   document.getElementById('dialog-close').addEventListener('click',()=>dialog.close());
   dialog.addEventListener('close',()=>lastOpener?.focus({preventScroll:true}));
   dialog.addEventListener('click',event=>{

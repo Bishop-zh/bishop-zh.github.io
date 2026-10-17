@@ -55,3 +55,13 @@
   .capabilities>div { grid-template-columns:72px minmax(0,1fr); gap:12px }.capabilities p:not(.stack-label),.capabilities h3 { font-size:12px }
 }
 @media(max-width:360px) { .site-header { gap:10px; padding:0 20px }.site-header nav { gap:10px; font-size:10px }.wordmark { font-size:17px }.profile-heading h1 { font-size:52px }.profile-role { font-size:20px }.project-index small { width:100%; padding-left:24px } }
+/* Play links point to separate project Pages; no game binaries are loaded here. */
+.project-actions { display:flex; align-items:center; flex-wrap:wrap; gap:20px }
+.play-link { display:inline-flex; align-items:center; justify-content:space-between; gap:26px; min-height:42px; padding:10px 18px; border:1px solid var(--accent); border-radius:3px; color:#17201d; background:var(--accent); font-size:12px }
+.play-link:hover { background:#e9f3d6 }.demo-note { font-size:11px; line-height:1.8; color:var(--muted); margin-top:12px; max-width:340px }
+.project-subtitle { font-size:clamp(20px,2vw,29px); letter-spacing:-.02em }
+.screenshot-gallery .static-image { aspect-ratio:16/9 }.screenshot-gallery .static-image img { height:100%; object-fit:contain }
+.screenshot-gallery .visual-caption { padding-left:0; padding-right:0; flex-wrap:wrap; gap:10px }
+.screenshot-tabs { display:flex; gap:12px }.screenshot-tabs button { border:0; border-bottom:1px solid transparent; padding:5px 0; background:transparent; font:inherit; color:var(--muted); cursor:pointer }
+.screenshot-tabs button[aria-pressed="true"] { color:var(--accent); border-color:var(--accent) }
+@media(max-width:700px) { .project-actions { gap:16px }.project-actions .source-link { width:114px }.project-subtitle { font-size:23px }.demo-note { max-width:none } }

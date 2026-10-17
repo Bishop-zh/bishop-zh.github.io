@@ -68,3 +68,20 @@ git push github main
 PKBall 是新初始化的工程仓库，已添加 Unity 忽略规则，只提交 `Assets`、`Packages`、`ProjectSettings`、`Docs`、`Tools` 和项目说明。`origin` 指向 Gitee 的 `sillybishop/pkball`，`github` 指向 GitHub。
 
 GitHub 的大包 HTTPS 上传在当前网络反复断开，因此游戏项目的 `github` 远程已配置 SSH 443 端口，并使用本机专用密钥与现有系统代理。私钥位于本机 `.ssh` 目录，没有加入任何项目。若将来更换电脑或系统代理端口，需要重新检查 SSH 配置。
+
+## 网页小游戏分别更新
+
+个人主页只包含项目截图、介绍和“在线试玩”跳转；游戏二进制分别放在各自仓库的 `gh-pages` 分支。
+
+| 项目 | 试玩地址 | 本地源工程 |
+| --- | --- | --- |
+| 锈境 | https://bishop-zh.github.io/platform-jumping/ | `C:\demo\u3D\jump` |
+| Who Will BOOM | https://bishop-zh.github.io/who-will-boom/ | `C:\demo\u3D\Who will BOOM` |
+| PKBall | https://bishop-zh.github.io/pkball/ | `C:\code\GameMake\PKBall` |
+| TankGame | https://bishop-zh.github.io/tank-game/ | 本工作区的 `tank-game-webgl`，来自此前的本地镜像 |
+
+每个源工程的 `WEBGL.md` 都有构建与发布说明。用 Unity 2022.3.62f3c1 和 WebGL 模块，执行 `PortfolioWebGLBuild.Build` 即可构建；不要把 Library、Temp 或 Windows 构建目录放进主页。更新游戏不需要重新上传个人主页。
+
+本次辅助脚本在工作区 `.tools/` 中：`package-webgl.mjs <仓库名>` 打包已成功的 Unity 输出并生成试玩页面；`publish-game-api.ps1 -Slug <仓库名>` 使用本机已有 GitHub 登录，逐文件校验 SHA 并发布到该项目的 gh-pages。它们不是主页运行依赖，不会上传凭据。公开试玩的路径长期不变，主页按钮不需要每次修改。
+
+Who Will BOOM 网页是单机 / AI 试玩，TCP/UDP 联机和语音仍使用桌面版。当前游戏推荐桌面 Chrome / Edge、鼠标和键盘。

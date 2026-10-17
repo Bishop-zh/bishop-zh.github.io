@@ -16,11 +16,11 @@
 
 `email` 暂留空；填入真实邮箱并运行生成命令后，首页会出现“邮件联系”，简历也会显示邮箱。到岗年份按本次提供信息的时间写为 2026 年；如计划变化，修改 `availability`。学习计划单独展示，不计入已掌握技能。
 
-`profile.json` 中的 `projects` 用于简历项目摘要；主页两个作品分区与文章列表仍在 `dist/index.html` 中维护。不要直接修改首页个人信息区或 `dist/resume.html`，它们会在生成时更新。项目个人分工、开发时间、联系方式和实机素材仍需根据真实信息补充。
+`profile.json` 中的 `projects` 用于简历项目摘要；主页三个作品分区与文章列表仍在 `dist/index.html` 中维护。不要直接修改首页个人信息区或 `dist/resume.html`，它们会在生成时更新。项目个人分工、开发时间、联系方式和实机素材仍需根据真实信息补充。
 
 ## 已实现
 
-- 五屏结构：个人信息 → 技能与实践 → 锈境 → Who Will BOOM → 技术与项目文档。首屏可直接跳到任一项目，顶部导航可直达技能第二屏。
+- 六屏结构：个人信息 → 技能与实践 → 锈境 → Who Will BOOM → PKBall → 技术与项目文档。首屏可直接跳到任一项目，顶部导航可直达技能第二屏。
 - 桌面一次滚轮手势切换一屏，过滤触控板惯性；手机使用原生滚动吸附。小屏或矮窗口内容较长时，可先滚动读完当前屏。
 - 锈境三张界面图采用透视胶片排列，向左右无限循环。支持图片边缘按钮、左右方向键、鼠标拖动和手机真实触摸滑动。
 - 图片左右切换与页面上下切屏相互独立；当前项目与图片变化时，背景同步更新。
@@ -39,8 +39,8 @@
 - `assets/rust-levels-preview.webp` 来自同一仓库的 `ArtSource/LevelSelect/preview.png`，仅转换为 WebP 以减小下载量。
 - `assets/rust-settings-preview.webp` 来自同一仓库的 `ArtSource/Modal/settings_preview.png`，仅转换为 WebP 以减小下载量。
 - 以上三张是仓库中的界面设计预览，未声称它们是运行中的实机游玩截图。
-- `assets/boom-cover.svg` 是明确标注的原创概念标题图。Who Will BOOM 和 TankGame 仍需提供运行截图或录屏，才能完成实机封面替换。
-- 没有现成的浏览器可玩链接，因此页面提供真实源码入口，未伪装“开始游戏”按钮。
+- `assets/boom-gameplay.webp` / `boom-menu.webp` 来自本机 Who Will BOOM 的 Preview 实机截图；`assets/pkball-battle.webp` / `pkball-overtime.webp` 来自 PKBall 的 Artifacts/Balance 运行截图。仅缩小尺寸和压缩编码，未修改游戏内容。
+- 三个项目分区均提供独立仓库的 Pages 在线试玩链接；TankGame 的试玩入口在技术记录列表。主页不会加载游戏 wasm、data 或 Unity loader。
 
 素材来源：
 
@@ -54,3 +54,12 @@
 `verify.mjs` 使用本机现有 Chrome 和工作区附带的 Playwright，检查滚轮手势只切一屏、键盘与快捷导航、胶片双向循环、图片放大与焦点恢复、背景动画/暂停，以及通过 Chrome DevTools 发送的真实触摸左右滑动和上下切屏。覆盖 320 / 390 / 768 / 1440px 宽度和矮窗口，另验证减少动态效果与无 WebGL 降级。检查结果位于 `verification/`。
 
 该验证脚本引用当前机器的绝对依赖路径，不属于网站部署文件。
+
+## 独立网页试玩
+
+- [锈境](https://bishop-zh.github.io/platform-jumping/)
+- [Who Will BOOM 单机 / AI](https://bishop-zh.github.io/who-will-boom/)
+- [PKBall](https://bishop-zh.github.io/pkball/)
+- [TankGame](https://bishop-zh.github.io/tank-game/)
+
+游戏构建分别保存在各自仓库的 gh-pages 分支。更新游戏不会将大文件放入本主页仓库；主页仅维护截图、介绍与跳转。

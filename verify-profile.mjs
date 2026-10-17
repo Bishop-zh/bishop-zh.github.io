@@ -20,7 +20,7 @@ try {
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth), `Overflow: ${width} ${route}`);
       if (route === '/') {
         assert(await page.locator('.capabilities h3').count()===5, 'Skill groups missing');
-        assert(await page.locator('.panel').evaluateAll(nodes=>nodes.map(n=>n.id).join(',')==='profile,skills,rust,boom,notes'), 'Panel order incorrect');
+        assert(await page.locator('.panel').evaluateAll(nodes=>nodes.map(n=>n.id).join(',')==='profile,skills,rust,boom,pkball,notes'), 'Panel order incorrect');
         await page.locator('.site-header a[href="#skills"]').click();
         await page.waitForFunction(()=>window.__portfolioPreview.state.activePanel==='skills');
         assert(await page.locator('#page-number').innerText()==='02', 'Skills page number incorrect');
@@ -47,5 +47,5 @@ try {
   await page.screenshot({path:fileURLToPath(new URL('verification/resume-print.png',import.meta.url)),fullPage:true});
   assert(errors.length===0,errors.join('\n'));
   await writeFile(new URL('verification/profile-report.json',import.meta.url),JSON.stringify({checks,printButton:true,printStyles:true,errors},null,2));
-  console.log('PASS: five panels, skills navigation and page 02, profile and resume at 320/390/768/1440px, print action and print CSS; no page errors.');
+  console.log('PASS: six panels, skills navigation and page 02, profile and resume at 320/390/768/1440px, print action and print CSS; no page errors.');
 } finally {await browser.close();}

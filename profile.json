@@ -13,10 +13,22 @@
   "github": "https://github.com/Bishop-zh",
   "summary": "具备编程基础与 Unity 实践经验，能够编写一般业务逻辑。注重代码格式与可读性，关注性能开销，熟练使用 AI 编程工具辅助开发。",
   "skills": [
-    {"title": "编程基础", "text": "了解常见数据结构、算法与面向对象编程，了解 C++、C# 语法。"},
-    {"title": "Unity 开发", "text": "能使用 UGUI 搭建界面，基本了解 Unity API，能够编写一般业务逻辑。"},
-    {"title": "代码与工具", "text": "注重代码格式与可读性，关注性能开销，熟练使用 AI 编程工具辅助开发。"},
-    {"title": "团队协作", "text": "在课程设计等项目中使用 Git 与 Gitee 进行团队协作和项目管理。"}
+    {
+      "title": "编程基础",
+      "text": "了解常见数据结构、算法与面向对象编程，了解 C++、C# 语法。"
+    },
+    {
+      "title": "Unity 开发",
+      "text": "能使用 UGUI 搭建界面，基本了解 Unity API，能够编写一般业务逻辑。"
+    },
+    {
+      "title": "代码与工具",
+      "text": "注重代码格式与可读性，关注性能开销，熟练使用 AI 编程工具辅助开发。"
+    },
+    {
+      "title": "团队协作",
+      "text": "在课程设计等项目中使用 Git 与 Gitee 进行团队协作和项目管理。"
+    }
   ],
   "learningPlan": "计划进一步学习游戏引擎底层实现、技术美术与渲染。",
   "projects": [
@@ -25,14 +37,30 @@
       "type": "2D 平台跳跃 · Unity / C#",
       "url": "https://github.com/Bishop-zh/platform-jumping",
       "description": "围绕跳跃、冲刺与移动平台，实现 2D 平台关卡与角色交互。",
-      "points": ["角色控制：输入缓存、离地宽限与冲刺。", "关卡与交互：移动平台、模块化地图、复合碰撞体、UnityEvent、HUD 与本地存档。"]
+      "points": [
+        "角色控制：输入缓存、离地宽限与冲刺。",
+        "关卡与交互：移动平台、模块化地图、复合碰撞体、UnityEvent、HUD 与本地存档。"
+      ]
     },
     {
       "name": "Who Will BOOM",
       "type": "局域网联机 · Unity / C#",
       "url": "https://github.com/Bishop-zh/who-will-boom",
       "description": "从棋盘规则到房间通信，构建带 AI 与语音的局域网游戏。",
-      "points": ["房间与同步：TCP 房间、房主权威快照、棋盘规则与 AI。", "语音通信：16 kHz PCM、TCP 中继与 UDP 广播。"]
+      "points": [
+        "房间与同步：TCP 房间、房主权威快照、棋盘规则与 AI。",
+        "语音通信：16 kHz PCM、TCP 中继与 UDP 广播。"
+      ]
+    },
+    {
+      "name": "PKBall：弹珠决斗与肉鸽构筑",
+      "type": "单机原型 · Unity / C# / URP",
+      "url": "https://github.com/Bishop-zh/pkball",
+      "description": "结合圆环装备、冒险经营与自动弹射决斗。",
+      "points": [
+        "构筑与成长：商店、事件、装备环与道具合成。",
+        "共用战斗：碰撞、自动触发、毒火盾与主播双方配置。"
+      ]
     }
   ]
 }

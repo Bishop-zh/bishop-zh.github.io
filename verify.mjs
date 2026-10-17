@@ -60,6 +60,16 @@ try{
   check((await state(page)).activePanel==='boom'&&(await state(page)).activeImage===3,'Next wheel did not select BOOM');
   await shot(page,'desktop-boom');
   await page.mouse.click(30,200);await page.keyboard.press('PageDown');await page.waitForTimeout(1100);
+  check((await state(page)).activePanel==='pkball','PKBall PageDown navigation failed');
+  check((await state(page)).activeImage===6,'PKBall ambient missing');await shot(page,'desktop-pkball');
+  await page.locator('#pkball [data-label="决胜阶段"]').click();
+  await page.locator('#pkball [data-enlarge]').click();
+  check((await page.locator('#dialog-image').getAttribute('src')).includes('pkball-overtime'),'PKBall screenshot dialog mismatch');
+  await page.keyboard.press('Escape');
+  check(await page.locator('.play-link').count()===3,'Expected three separate project play links');
+  const binaries=await page.evaluate(()=>performance.getEntriesByType('resource').filter(r=>/\.(wasm|unityweb)(\?|$)/.test(r.name)).length);
+  check(binaries===0,'Portfolio must not load game binaries');
+  await page.mouse.click(30,200);await page.keyboard.press('PageDown');await page.waitForTimeout(1100);
   check((await state(page)).activePanel==='notes','PageDown navigation failed');await shot(page,'desktop-notes');
   check((await state(page)).activeImage===5,'Notes night scene missing');
   const notesA=await page.screenshot();await page.waitForTimeout(550);const notesB=await page.screenshot();
@@ -77,7 +87,7 @@ try{
   report.responsive=[];
   for(const [width,height] of [[320,568],[390,844],[768,1024],[1440,600],[1440,1000]]){
     await page.setViewportSize({width,height});
-    for(const id of ['profile','skills','rust','boom','notes']){
+    for(const id of ['profile','skills','rust','boom','pkball','notes']){
       await jump(page,id);
       const geometry=await page.evaluate(id=>{
         const panel=document.getElementById(id),r=panel.getBoundingClientRect(),content=panel.querySelector('.panel-inner').getBoundingClientRect();

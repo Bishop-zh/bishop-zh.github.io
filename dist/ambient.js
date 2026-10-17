@@ -4,9 +4,12 @@
     {src:'assets/rust-menu-preview.webp', name:'锈境：能源重启 · 主菜单预览'},
     {src:'assets/rust-levels-preview.webp', name:'锈境：能源重启 · 选关界面预览'},
     {src:'assets/rust-settings-preview.webp', name:'锈境：能源重启 · 设置界面预览'},
-    {src:'assets/boom-cover.svg', name:'Who Will BOOM · 概念封面'},
+    {src:'assets/boom-gameplay.webp', name:'Who Will BOOM · AI 对局实机'},
     {src:'assets/ambient-night.svg', name:'个人信息 · 夜色'},
-    {src:'assets/ambient-notes.svg', name:'技术与记录 · 夜色'}
+    {src:'assets/ambient-notes.svg', name:'技术与记录 · 夜色'},
+    {src:'assets/pkball-battle.webp', name:'PKBall · 弹珠决斗实机'},
+    {src:'assets/boom-menu.webp', name:'Who Will BOOM · 主菜单实机'},
+    {src:'assets/pkball-overtime.webp', name:'PKBall · 决胜阶段实机'}
   ];
   const canvas = document.getElementById('ambient-canvas');
   const fallback = document.getElementById('ambient-fallback');
