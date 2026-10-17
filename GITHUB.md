@@ -39,7 +39,7 @@ GitHub Pages 托管 HTML、CSS、JavaScript 和图片；游戏服务器需另外
 
 ## Gitee 项目迁移
 
-Gitee 原仓库保留。迁移使用独立镜像副本，将全部分支和标签推送到新的空 GitHub 仓库，保留原提交历史。
+Gitee 原仓库保留。最终使用本机现有 Git 仓库推送到 GitHub，保留原提交历史；没有重新暂存原工程中的未跟踪文件。TankGame 使用本次已下载完成的 Git 镜像。
 如项目使用 Git LFS，还需要单独迁移 LFS 对象；大文件或上传限制应先处理，不能仅凭网页上出现仓库名称判断迁移成功。
 普通 Git 推送不包含 Gitee 的 Issue、评论、PR 和 Releases 附件。
 
@@ -56,4 +56,15 @@ git push github main
 
 `platform-jumping` 同样使用 `main`，`tank-game` 原分支为 `master`。
 两个平台不会自动互相同步；推送到一个平台后，另一个平台需要另行推送。
-本地迁移副本是裸镜像，用于保留历史；日常开发继续使用原来的游戏项目目录即可。
+本地项目与远程地址：
+
+| 项目 | 本地目录 | GitHub 仓库 | 分支 |
+| --- | --- | --- | --- |
+| 锈境 | `C:\demo\u3D\jump` | `Bishop-zh/platform-jumping` | `main` |
+| Who Will BOOM | `C:\demo\u3D\Who will BOOM` | `Bishop-zh/who-will-boom` | `main` |
+| PKBall | `C:\code\GameMake\PKBall` | `Bishop-zh/pkball` | `main` |
+| TankGame | 本次保留的 Git 镜像 | `Bishop-zh/tank-game` | `master` |
+
+PKBall 是新初始化的工程仓库，已添加 Unity 忽略规则，只提交 `Assets`、`Packages`、`ProjectSettings`、`Docs`、`Tools` 和项目说明。`origin` 指向 Gitee 的 `sillybishop/pkball`，`github` 指向 GitHub。
+
+GitHub 的大包 HTTPS 上传在当前网络反复断开，因此游戏项目的 `github` 远程已配置 SSH 443 端口，并使用本机专用密钥与现有系统代理。私钥位于本机 `.ssh` 目录，没有加入任何项目。若将来更换电脑或系统代理端口，需要重新检查 SSH 配置。
