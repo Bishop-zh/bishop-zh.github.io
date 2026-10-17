@@ -1,0 +1,57 @@
+/* Personal profile additions; keeps the portfolio's existing visual language. */
+.skills-layout { display:grid; grid-template-columns:1fr 1.3fr; gap:8vw; align-items:start }
+.skills-heading h2 { font-size:clamp(44px,5vw,72px); line-height:1.2; font-weight:500; letter-spacing:-.045em }
+.skills-heading>p { margin-top:24px; color:var(--muted); font-size:15px; line-height:1.9 }
+.skills-heading .text-link { margin-top:30px }
+.skills-panel .capabilities { grid-area:auto; max-width:none; border-top:0; padding-top:0; gap:0 }
+.skills-panel .capabilities>div { padding:22px 0; border-bottom:1px solid var(--line); grid-template-columns:100px minmax(0,1fr); gap:24px }
+.skills-panel .capabilities>div:first-child { padding-top:0 }
+.skills-panel .capabilities h3 { font-size:16px }
+.skills-panel .capabilities p { font-size:15px; line-height:1.9 }
+.skills-panel .capabilities .learning-plan { border-top:0; border-bottom:0 }
+.notes-layout { grid-template-areas:"heading articles" }
+@media(max-width:700px) {
+  .skills-layout { grid-template-columns:1fr; gap:30px }
+  .skills-heading h2 { font-size:38px }.skills-heading h2 br { display:none }
+  .skills-heading>p { font-size:14px; margin-top:14px }.skills-heading .text-link { margin-top:14px }
+  .skills-panel .capabilities>div { grid-template-columns:76px minmax(0,1fr); gap:16px; padding:18px 0 }
+  .skills-panel .capabilities h3,.skills-panel .capabilities p { font-size:14px }
+  .notes-layout { grid-template-areas:"heading" "articles" }
+}
+.wordmark { font-size:22px; letter-spacing:-.04em; white-space:nowrap }
+.profile-inner { grid-template-columns:1.15fr 1fr; column-gap:7vw; row-gap:46px }
+.profile-heading h1 { font-size:clamp(64px,6.7vw,100px); margin-top:24px; letter-spacing:-.045em }
+.profile-role { font-size:clamp(22px,2.2vw,32px); margin-top:18px; line-height:1.5 }
+.profile-education { margin-top:24px; font-size:16px; color:var(--muted); line-height:1.9 }
+.profile-education strong { color:var(--accent); font-weight:500 }
+.profile-aside { padding:0; align-self:center }
+.availability-label { font:11px/1.5 "Courier New",monospace; letter-spacing:1.2px; color:var(--accent) }
+.availability-date { margin-top:16px; font-size:clamp(18px,1.7vw,25px); line-height:1.5 }
+.availability-duration { font-size:16px; margin-top:4px; color:var(--muted) }
+.profile-detail { font-size:15px; margin:22px 0; line-height:1.9; max-width:460px }
+.profile-actions { display:flex; flex-wrap:wrap; gap:12px }
+.profile-button { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:10px 20px; border:1px solid var(--line); font-size:14px; border-radius:3px; transition:background .2s }
+.profile-button:hover { background:#ffffff12 }
+.profile-button.primary { background:var(--accent); color:#17201d; border-color:var(--accent) }
+.profile-button.primary:hover { background:#e9f3d6 }
+.profile-aside .text-link { margin-top:12px; max-width:100%; font-size:13px }
+.profile-bottom { grid-template-columns:1.15fr 1fr; gap:7vw }
+.profile-stack { font-size:11px; gap:20px }
+.project-index a { flex-wrap:wrap; gap:10px; font-size:14px; align-items:baseline }
+.project-index small { font-size:11px; color:var(--muted) }
+.capabilities { max-width:420px }
+.capabilities h3 { font-size:13px }
+.capabilities p:not(.stack-label) { font-size:13px; line-height:1.85 }
+.capabilities>div { grid-template-columns:80px minmax(0,1fr); gap:12px }
+.capabilities .learning-plan { padding-top:16px; border-top:1px solid var(--line) }
+@media(max-width:1099px) { .profile-inner { column-gap:5vw }.profile-education { font-size:14px }.profile-detail { font-size:14px }.capabilities>div { grid-template-columns:1fr; gap:5px } }
+@media(max-width:700px) {
+  .wordmark { font-size:19px }.site-header { gap:12px }.site-header nav { gap:14px }
+  .profile-inner { grid-template-columns:1fr; gap:28px; padding-top:104px; padding-bottom:62px }
+  .profile-heading h1 { font-size:60px; margin-top:16px }.profile-role { font-size:22px; margin-top:12px }.profile-education { font-size:14px; margin-top:16px }
+  .profile-aside { display:block }.availability-date { font-size:19px; margin-top:10px }.availability-duration { font-size:14px }.profile-detail { font-size:14px; margin:16px 0 }
+  .profile-aside .text-link { font-size:12px; margin-top:8px }.profile-button { padding:10px 16px }
+  .profile-bottom { grid-template-columns:1fr; gap:18px }.profile-stack { font-size:10px }.project-index a { font-size:13px }.project-index small { font-size:10px }
+  .capabilities>div { grid-template-columns:72px minmax(0,1fr); gap:12px }.capabilities p:not(.stack-label),.capabilities h3 { font-size:12px }
+}
+@media(max-width:360px) { .site-header { gap:10px; padding:0 20px }.site-header nav { gap:10px; font-size:10px }.wordmark { font-size:17px }.profile-heading h1 { font-size:52px }.profile-role { font-size:20px }.project-index small { width:100%; padding-left:24px } }

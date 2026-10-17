@@ -1,0 +1,49 @@
+{
+  "name": "张梓彦",
+  "role": "Unity 客户端开发实习生 / 2027 届",
+  "location": "湖南长沙",
+  "phone": "18536689303",
+  "email": "2778486337@qq.com",
+  "photo": "assets/resume-avatar.jpg",
+  "education": "中南林业科技大学 | 软件工程本科 | 2023.09—2027.06",
+  "honors": "GPA 3.3/5.0 | 专业排名前 20% | CET-4 | 校级奖学金（2025）",
+  "courses": "主修：数据结构、操作系统、计算机网络、软件工程、设计模式",
+  "skills": [
+    "Unity：使用生命周期、协程、场景管理、预制体、ScriptableObject 与 Animator；使用 Rigidbody2D、Collider2D、Physics2D.BoxCast 实现物理交互；掌握 UGUI 的 TextMeshPro、RectTransform、CanvasScaler、布局与遮罩、拖放事件及多分辨率适配",
+    "C# 与游戏架构：熟悉面向对象、委托与事件；按配置、运行时状态、规则与表现拆分模块，实现事件驱动 UI、数据驱动词条、Buff 聚合与成长；使用对象池复用特效和伤害数字，分离数值结算与表现。",
+    "网络与音频：使用 TCP 后台线程与并发队列完成主线程消息派发、房主权威状态同步；使用 Microphone 循环采样、音频分帧、环形缓冲与采样率转换；使用 JSON 保存配置和游戏记录。",
+    "工程与素材：使用 Git 管理版本，结合 Codex / Claude 辅助开发与调试；处理 AI 图集透明切片、动画帧对齐及 Unity 导入，统一 PPU、Point 过滤和精灵资源规范。"
+  ],
+  "projects": [
+    {
+      "name": "锈境 能源重启",
+      "type": "Unity 2D 平台跳跃游戏",
+      "url": "https://github.com/Bishop-zh/platform-jumping",
+      "points": [
+        "UI 与素材：实现主菜单、选关、HUD、暂停与结算 UGUI 预制体；将 AI 图集拆为透明精灵与动画帧，统一PPU、Point 过滤和帧对齐；复用数字图集展示动态数据。",
+        "适配与复用：基于 RectTransform 与 CanvasScaler 实现控件等比缩放、背景覆盖；共享 HUD 绑定当前关卡数据，支持窗口拖拽缩放，保留预制体手工排版。",
+        "2D 物理与组件：Update 采样输入、FixedUpdate 更新 Rigidbody2D；结合接触法线与 BoxCast 检测落地，实现跳跃缓存、离地宽限、冲刺及平台搭载；以组件事件连接机关、供电与关卡流程。"
+      ]
+    },
+    {
+      "name": "弹珠决斗与肉鸽构筑",
+      "type": "Unity 构筑对战游戏",
+      "url": "",
+      "points": [
+        "背包交互：基于 UGUI 拖放接口实现八扇区装备盘、仓库、合成与出售；用 ScriptableObject / JSON 保存道具定义，运行时实例管理等级、冷却和装备位置。",
+        "词条与 Buff：拆分道具词条、永久成长账本与本场 Buff，按来源和稳定词条 ID 聚合；记录触发时实际增量，修复升级放大历史加成的问题；统一调度持续状态并在战斗结束清理临时效果。",
+        "规则与表现分离：真实战斗事件驱动独立特效系统，支持道具动画参数编辑；复用特效与伤害数字对象，限制视觉数量时保留数值结算；两种模式共用战斗表现，动画参数不参与伤害结算。"
+      ]
+    },
+    {
+      "name": "Who Will BOOM 谁会爆炸",
+      "type": "Unity 多人回合制游戏",
+      "url": "https://github.com/Bishop-zh/who-will-boom",
+      "points": [
+        "UGUI 与图表：整理 8 个可编辑页面预制体，复用图集切片统一界面；继承 MaskableGraphic，VertexHelper 绘制胜率环，结合 Image.fillAmount 展示真实战绩，JSON 持久化历史记录。",
+        "规则与联机：拆分指令驱动规则、盘面、网络与表现层；房主校验指令并同步权威快照，TCP 后台线程收发、队列交由 Unity 主线程派发，避免跨线程访问 Unity API。",
+        "音频优化：Microphone 循环缓冲连续读取并按 20 ms 分帧；独立处理采集、发送与播放，接收端通过环形缓冲和采样率转换缓解语音断续。"
+      ]
+    }
+  ]
+}
